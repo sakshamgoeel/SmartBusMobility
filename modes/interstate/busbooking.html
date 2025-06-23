@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🚌 InterState Seat Booking</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #0f172a;
+    }
+    .legend, #fareDisplay, .form-box { margin-top: 20px; text-align: center; }
+    .legend {
+      display: flex; justify-content: center; gap: 20px; font-size: 14px;
+    }
+    .legend span {
+      display: inline-block; width: 20px; height: 20px; border-radius: 3px; margin-right: 5px;
+    }
+    .available { background: #ffffff; border: 1px solid #ccc; }
+    .booked { background: #ef4444; }
+    .chair { background: #c7d2fe; }
+    .sleeper { background: #fcd34d; }
+    #driver { text-align: center; margin-top: 10px; font-style: italic; font-size: 14px; color: #64748b; }
+    .bus-layout {
+      display: flex; justify-content: space-between; margin-top: 30px; position: relative;
+    }
+    .berth {
+      background-color: #ffffff; border: 2px solid #cbd5e1; padding: 20px;
+      width: 45%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .berth h2 { text-align: center; color: #1e3a8a; margin-bottom: 10px; }
+    .seats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    }
+    .seat {
+      width: 60px; height: 40px; background: #e2e8f0; display: flex;
+      justify-content: center; align-items: center; cursor: pointer; border-radius: 5px; font-weight: bold;
+    }
+    .seat.selected { background: #10b981; color: white; }
+    .seat.booked { background: #ef4444; color: white; cursor: not-allowed; }
+    .form-box {
+      background: #ffffff; border-radius: 10px; padding: 20px; width: 400px; margin: 40px auto 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .form-box input, .form-box button {
+      width: 100%; padding: 12px; margin: 10px 0; font-size: 16px; border-radius: 5px; border: 1px solid #cbd5e1;
+    }
+    .form-box button { background: #2563eb; color: white; cursor: pointer; }
+    .form-box button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+
+<h1>🚌 InterState Seat Booking</h1>
+
+<div class="legend">
+  <div><span class="booked"></span> Booked</div>
+  <div><span class="available"></span> Available</div>
+  <div><span class="chair"></span> Chair ₹400</div>
+  <div><span class="sleeper"></span> Sleeper ₹600</div>
+</div>
+
+<div id="driver">Driver is seated in front</div>
+
+<div class="bus-layout">
+  <div class="berth">
+    <h2>Lower Coach Chair</h2>
+    <div class="seats" id="chair-seats"></div>
+  </div>
+
+  <div class="berth">
+    <h2>Upper Sleeper Coach</h2>
+    <div class="seats" id="sleeper-seats"></div>
+  </div>
+</div>
+
+<div id="fareDisplay">Total Fare: ₹0</div>
+
+<div class="form-box">
+  <label>Name:</label>
+  <input type="text" id="name" placeholder="Enter your name" />
+  <label>Age:</label>
+  <input type="number" id="age" placeholder="Enter your age" />
+  <button id="bookBtn">Book & Download Ticket</button>
+</div>
+
+<script>
+  const chairSeats = document.getElementById("chair-seats");
+  const sleeperSeats = document.getElementById("sleeper-seats");
+  const fareDisplay = document.getElementById("fareDisplay");
+  const bookedSeats = ["C3", "C5", "S2", "S9"];
+  let selectedSeats = [];
+  let allBookings = [];
+
+  function updateFare() {
+    const total = selectedSeats.reduce((sum, seat) => sum + parseInt(seat.dataset.price), 0);
+    fareDisplay.textContent = `Total Fare: ₹${total}`;
+  }
+
+  function toggleSeat(seat) {
+    if (seat.classList.contains("selected")) {
+      seat.classList.remove("selected");
+      selectedSeats = selectedSeats.filter(s => s !== seat);
+    } else {
+      seat.classList.add("selected");
+      selectedSeats.push(seat);
+    }
+    updateFare();
+  }
+
+  for (let i = 1; i <= 20; i++) {
+    const seat = document.createElement("div");
+    const label = "C" + i;
+    seat.className = "seat";
+    seat.innerText = label;
+    seat.dataset.price = 400;
+    if (bookedSeats.includes(label)) {
+      seat.classList.add("booked");
+    } else {
+      seat.onclick = () => toggleSeat(seat);
+    }
+    chairSeats.appendChild(seat);
+  }
+
+  for (let i = 1; i <= 10; i++) {
+    const seat = document.createElement("div");
+    const label = "S" + i;
+    seat.className = "seat";
+    seat.innerText = label;
+    seat.dataset.price = 600;
+    if (bookedSeats.includes(label)) {
+      seat.classList.add("booked");
+    } else {
+      seat.onclick = () => toggleSeat(seat);
+    }
+    sleeperSeats.appendChild(seat);
+  }
+
+  document.getElementById("bookBtn").addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const age = document.getElementById("age").value.trim();
+    if (!name || !age || selectedSeats.length === 0) {
+      alert("Please enter name, age and select at least one seat.");
+      return;
+    }
+
+    const seatLabels = selectedSeats.map(seat => seat.innerText);
+    const total = selectedSeats.reduce((sum, seat) => sum + parseInt(seat.dataset.price), 0);
+    selectedSeats.forEach(seat => {
+      seat.classList.remove("selected");
+      seat.classList.add("booked");
+    });
+    allBookings.push({ seats: seatLabels, fare: total });
+    selectedSeats = [];
+    updateFare();
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("InterState Bus Ticket Confirmation", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Name: ${name}`, 20, 35);
+    doc.text(`Age: ${age}`, 20, 43);
+
+    let y = 55;
+    allBookings.forEach((entry, idx) => {
+      doc.text(`Booking ${idx + 1}:`, 20, y);
+      y += 8;
+      doc.text(`Seats: ${entry.seats.join(", ")}`, 20, y);
+      y += 8;
+      doc.text(`Fare: ₹${entry.fare}`, 20, y);
+      y += 10;
+    });
+
+    const grandTotal = allBookings.reduce((sum, b) => sum + b.fare, 0);
+    doc.setFontSize(14);
+    doc.text(`Total Fare: ₹${grandTotal}`, 20, y + 5);
+
+    doc.setFontSize(10);
+    doc.text("Please carry valid ID proof. Have a safe journey!", 20, y + 15);
+
+    doc.save(`${name}_ticket.pdf`);
+  });
+</script>
+
+</body>
+</html>

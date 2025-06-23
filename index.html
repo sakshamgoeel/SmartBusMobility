@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="main/styles.css" />
+    <title>SmartBus By Saksham</title>
+  </head>
+  <body>
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="#" class="logo">SmartBus</a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <i class="ri-menu-line"></i>
+        </div>
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#home">HOME</a></li>
+        <li><a href="#about">MODES</a></li>
+        <li><a href="#tour">FEATURES</a></li>
+        <li><a href="#package">BOOK NOW</a></li>
+        <li><a href="#contact">REVIEWS</a></li>
+        <li><a href="AdminPanel.html">ADMIN</a></li>
+        <li><a href="login.html">BOOK TRIP</a></li>
+      </ul>
+      <div class="nav__btns">
+        <button class="btn" onclick="location.href='login.html'">Login</button>
+      </div>
+    </nav>
+
+    <header id="home">
+      <div class="header__container">
+        <div class="header__content">
+          <p>ELEVATE YOUR TRAVEL JOURNEY</p>
+          <h1>Experience The Magic Of Travel!</h1>
+          <div class="header__btns">
+            <a href="login.html">
+              <button class="btn">Book now</button>
+            </a>
+            <a href="login.html">
+              <span><i class="ri-play-circle-fill"></i></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section__container destination__container" id="about">
+      <h2 class="section__header">What do we offer?</h2>
+      <p class="section__description">Discover the convenience and features SmartBus by Saksham brings to your travel experience.</p>
+      <div class="destination__grid">
+        <div class="destination__card" onclick="location.href='modes/cityBus/CityBus.html'">
+          <img src="assets/dest.jpeg" alt="Intercity Buses" height="200" />
+          <div class="destination__card__details">
+            <div>
+              <h4>Intercity Buses</h4>
+              <p>Dehradun, Uttrakhand</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span> 4.7
+            </div>
+          </div>
+        </div>
+        <div class="destination__card" onclick="location.href='modes/interstate/state.html'">
+          <img src="assets/back.webp" alt="InterState Buses" height="200" />
+          <div class="destination__card__details">
+            <div>
+              <h4>InterState Buses</h4>
+              <p>Affordable all over India buses</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span> 4.7
+            </div>
+          </div>
+        </div>
+        <div class="destination__card" onclick="location.href='modes/women/women.html'">
+          <img src="assets/img-3.jpg" alt="Women Travel" height="200" />
+          <div class="destination__card__details">
+            <div>
+              <h4>Safe Women Travel</h4>
+              <p>Special women-only buses for safety</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span> 4.5
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container journey__container" id="tour">
+      <h2 class="section__header">Bus Travel Across India Made Simple!</h2>
+      <p class="section__description">Smart, Reliable, and Hassle-Free Bus Journeys with SmartBus by Saksham</p>
+      <div class="journey__grid">
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-bus-line"></i></span>
+            <h4>Quick & Easy Booking</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-bus-line"></i></span>
+            <h4>Instant Seat Reservation</h4>
+            <p>Book your bus tickets with just a few clicks. Real-time seat availability and instant confirmation make it faster than ever.</p>
+          </div>
+        </div>
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-route-line"></i></span>
+            <h4>Smart Route Suggestions</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-route-line"></i></span>
+            <h4>Find the Best Way</h4>
+            <p>Get optimized routes with time, fare, and change details—so you travel smarter, every time.</p>
+          </div>
+        </div>
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-map-pin-line"></i></span>
+            <h4>Live Bus Tracking</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-map-pin-line"></i></span>
+            <h4>Know Where Your Bus Is</h4>
+            <p>Track your bus in real-time, get live updates, and never wait at the stop again. Stay informed every step of your journey.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container showcase__container" id="package">
+      <div class="showcase__image">
+        <img src="assets/driver.jpg" alt="Bus Driver" height="300" />
+      </div>
+      <div class="showcase__content">
+        <h4>SMART TRAVEL WITH SMARTBUS</h4>
+        <p>Say goodbye to travel stress and hello to smooth journeys with SmartBus. Our platform ensures a convenient experience from start to finish.</p>
+        <p>Discover affordable fares, real-time tracking, and the fastest routes tailored to your needs. Booking your ride is just a click away.</p>
+        <div class="showcase__btn">
+          <a href="login.html">
+            <button class="btn">
+              Book A Bus Now
+              <span><i class="ri-arrow-right-line"></i></span>
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container discover__container">
+      <h2 class="section__header">Discover India On Wheels</h2>
+      <p class="section__description">Explore the country's rich culture and scenic routes comfortably by bus</p>
+      <div class="discover__grid">
+        <div class="discover__card">
+          <span><i class="ri-bus-line"></i></span>
+          <h4>Scenic Routes</h4>
+          <p>Travel through breathtaking landscapes, from mountains to coasts, all from your seat.</p>
+        </div>
+        <div class="discover__card">
+          <span><i class="ri-community-line"></i></span>
+          <h4>Connect With Local Life</h4>
+          <p>Experience local culture by visiting towns and villages often missed by others.</p>
+        </div>
+        <div class="discover__card">
+          <span><i class="ri-map-pin-2-line"></i></span>
+          <h4>Historic Destinations</h4>
+          <p>Reach iconic landmarks and heritage sites easily with well-planned bus schedules.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container client__container" id="contact">
+  <h2 class="section__header">Loved By Over a Thousand Bus Travelers</h2>
+  <p class="section__description">Hear from our happy passengers about their smooth journeys and unforgettable experiences with SmartBus.</p>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+
+      <div class="swiper-slide">
+        <div class="client__card">
+          <div class="client__content">
+            <div class="client__rating">
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+            </div>
+            <p>SmartBus made travel so easy! Quick booking, clean buses, and scenic routes I never expected. Highly recommend.</p>
+          </div>
+          <div class="client__details">
+            <img src="assets/client1.jpeg" alt="client" />
+            <div>
+              <h4>Rohan Mehta</h4>
+              <h5>Frequent Traveler</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="client__card">
+          <div class="client__content">
+            <div class="client__rating">
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+            </div>
+            <p>Traveling with SmartBus was a breeze! The schedules are reliable, and the customer service helped me tailor my trip with ease.</p>
+          </div>
+          <div class="client__details">
+            <img src="assets/saksham.jpeg" alt="client" />
+            <div>
+              <h4>Saksham Goyal</h4>
+              <h5>Adventure Seeker</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="client__card">
+          <div class="client__content">
+            <div class="client__rating">
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+            </div>
+            <p>Thanks to SmartBus, I discovered heritage sites and scenic routes. The bus rides were comfortable and affordable.</p>
+          </div>
+          <div class="client__details">
+            <img src="assets/client-3.jpg" alt="client" />
+            <div>
+              <h4>Amit Desai</h4>
+              <h5>Culture Enthusiast</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="client__card">
+          <div class="client__content">
+            <div class="client__rating">
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+            </div>
+            <p>SmartBus helped me balance work and travel. Seamless booking and on-time buses made every trip stress-free.</p>
+          </div>
+          <div class="client__details">
+            <img src="assets/client-4.jpg" alt="client" />
+            <div>
+              <h4>Neha Kapoor</h4>
+              <h5>Business Professional</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="client__card">
+          <div class="client__content">
+            <div class="client__rating">
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+              <span><i class="ri-star-fill"></i></span>
+            </div>
+            <p>Great experience! SmartBus app is user-friendly, and buses are punctual and well-maintained. Loved the journey!</p>
+          </div>
+          <div class="client__details">
+            <img src="assets/client-1.jpg" alt="client" />
+            <div>
+              <h4>Raj Verma</h4>
+              <h5>Travel Blogger</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+    <footer>
+      <div class="section__container footer__container">
+        <div class="footer__col">
+          <div class="footer__logo">
+            <a href="#" class="logo">SmartBus</a>
+          </div>
+          <p>Travel across India effortlessly with SmartBus — your trusted bus booking platform. Comfortable rides, reliable service, and unbeatable routes all in one place.</p>
+          <ul class="footer__socials">
+            <li><a href="#"><i class="ri-facebook-fill"></i></a></li>
+            <li><a href="#"><i class="ri-instagram-line"></i></a></li>
+            <li><a href="#"><i class="ri-twitter-line"></i></a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Quick Links</h4>
+          <ul class="footer__links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">Bus Routes</a></li>
+            <li><a href="#">Booking</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="main/main.js"></script>
+  </body>
+</html>

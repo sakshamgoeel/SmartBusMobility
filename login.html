@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login & Signup</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #cbd5e1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+      width: 400px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #60a5fa;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #334155;
+      color: #fff;
+    }
+    button {
+      padding: 12px 20px;
+      margin-top: 15px;
+      width: 100%;
+      font-weight: bold;
+      background-color: #22c55e;
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #15803d;
+    }
+    .switch-btns {
+      margin: 20px 0;
+    }
+    .switch-btns button {
+      width: 45%;
+      margin: 0 5px;
+      background-color: #2563eb;
+      color: #e0f2fe;
+    }
+    .switch-btns button:hover {
+      background-color: #1e40af;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 id="form-title">Login</h2>
+
+    <div class="switch-btns">
+      <button onclick="switchForm('login')">Login</button>
+      <button onclick="switchForm('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form" onsubmit="submitLogin(event)">
+      <input type="text" id="login-username" placeholder="Username" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signup-form" class="hidden" onsubmit="submitSignup(event)">
+      <input type="text" id="signup-name" placeholder="Full Name" required />
+      <input type="text" id="signup-username" placeholder="Username" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <script src="main/main.js"></script>
+</body>
+</html>

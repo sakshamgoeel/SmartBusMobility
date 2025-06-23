@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+  
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+  
+    h2 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+  
+    form {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 700px;
+      margin: 0 auto 2rem auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+  
+    input, button {
+      flex: 1 1 48%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+  
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+  
+    button[type="submit"] {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      color: #fff;
+      font-weight: bold;
+      flex: 1 1 100%;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s ease;
+    }
+  
+    button:hover {
+      background: linear-gradient(135deg, #16a085, #149174);
+    }
+  
+    #routeList {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+  
+    h3 {
+      margin-bottom: 1rem;
+      color: #ffffff;
+      font-size: 1.5rem;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.15);
+    }
+  
+    .route-card {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+  
+    .route-card:hover {
+      transform: translateY(-3px);
+    }
+  
+    .route-card p {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      color: #f0f0f0;
+    }
+  
+    @media (max-width: 600px) {
+      input, button {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+  <h2>Admin Panel: Manage Bus Routes</h2>
+  <form id="adminForm">
+    <input type="text" id="from" placeholder="From Station" required />
+    <input type="text" id="to" placeholder="To Station" required />
+    <input type="text" id="time" placeholder="Travel Time (e.g., 30 mins)" required />
+    <input type="number" id="cost" placeholder="Fare (₹)" required />
+    <input type="text" id="buses" placeholder="Buses (comma separated)" required />
+    <button type="submit">Add Route</button>
+  </form>
+
+  <div id="routeList"></div>
+
+  <script>
+    const routeList = document.getElementById("routeList");
+    const form = document.getElementById("adminForm");
+    const routes = {};  // Will store routes data
+
+    // Handle form submission
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      const from = form.from.value;
+      const to = form.to.value;
+      const time = form.time.value;
+      const cost = form.cost.value;
+      const buses = form.buses.value.split(",").map(b => b.trim());
+
+      if (!routes[from]) routes[from] = {};
+      routes[from][to] = { time, cost, buses };
+
+      renderRoutes();
+      form.reset();
+    };
+
+    // Render all routes in the route list
+    function renderRoutes() {
+      routeList.innerHTML = "<h3>Current Routes:</h3>";
+      for (let from in routes) {
+        for (let to in routes[from]) {
+          const { time, cost, buses } = routes[from][to];
+          routeList.innerHTML += `
+  <div class="route-card">
+    <p><strong>${from} → ${to}</strong></p>
+    <p>🕒 Time: ${time}</p>
+    <p>💰 Fare: ₹${cost}</p>
+    <p>🚌 Buses: ${buses.join(", ")}</p>
+  </div>`;
+
+        }
+      }
+    }
+
+    // Save routes to localStorage (if needed for persistence)
+    function saveRoutes() {
+      localStorage.setItem("routes", JSON.stringify(routes));
+    }
+
+    // Load routes from localStorage (when the page reloads)
+    function loadRoutes() {
+      const storedRoutes = localStorage.getItem("routes");
+      if (storedRoutes) {
+        Object.assign(routes, JSON.parse(storedRoutes));
+        renderRoutes();
+      }
+    }
+
+    // Load routes when the page loads
+    window.onload = loadRoutes;
+  </script>
+</body>
+</html>

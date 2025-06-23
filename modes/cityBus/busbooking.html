@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CityBus Seat Booking</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; }
+    h1 { text-align: center; color: #0f172a; }
+
+    .legend, .bus-layout, .form-box { margin-top: 20px; }
+    .legend {
+      display: flex; justify-content: center; gap: 20px; font-size: 14px;
+    }
+    .legend span {
+      display: inline-block; width: 20px; height: 20px;
+      border-radius: 3px; margin-right: 5px; vertical-align: middle;
+    }
+
+    .bus-layout {
+      display: flex; justify-content: space-evenly;
+      flex-wrap: wrap; gap: 40px;
+    }
+
+    .bus-section { text-align: center; }
+    .seats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 10px; margin-top: 10px;
+    }
+
+    .seat {
+      background: #e2e8f0; border-radius: 5px;
+      padding: 10px; text-align: center; cursor: pointer;
+    }
+    .seat.selected { background: #10b981; color: white; }
+    .seat.booked { background: #ef4444; color: white; cursor: not-allowed; }
+
+    .form-box {
+      background: #ffffff; padding: 20px; border-radius: 10px;
+      max-width: 400px; margin: auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #fareDisplay, #routeInfo {
+      text-align: center; margin: 20px 0; font-size: 18px; color: #1e3a8a;
+    }
+
+    input {
+      width: 100%; padding: 10px; margin: 8px 0 16px;
+      border: 1px solid #cbd5e1; border-radius: 5px;
+    }
+    button {
+      padding: 12px; width: 100%; font-size: 16px;
+      background: #2563eb; color: white; border: none; border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background: #1e40af; }
+  </style>
+</head>
+<body>
+
+<h1>🚌 CityBus Seat Booking</h1>
+
+<div id="routeInfo">
+  <p><strong>From:</strong> <span id="displayFrom"></span></p>
+  <p><strong>To:</strong> <span id="displayTo"></span></p>
+  <p><strong>Current Bus:</strong> <span id="displayBus"></span></p>
+</div>
+
+<div class="legend">
+  <div><span class="seat booked"></span> Booked</div>
+  <div><span class="seat"></span> Available</div>
+  <div><span style="background:#c7d2fe;" class="seat"></span> Chair ₹40</div>
+  <div><span style="background:#fcd34d;" class="seat"></span> Sleeper ₹70</div>
+</div>
+
+<div class="bus-layout">
+  <div class="bus-section">
+    <h3>Chair</h3>
+    <div id="chair-seats" class="seats-grid"></div>
+  </div>
+  <div class="bus-section">
+    <h3>Sleeper</h3>
+    <div id="sleeper-seats" class="seats-grid"></div>
+  </div>
+</div>
+
+<div id="fareDisplay">Total Fare: ₹0</div>
+
+<div class="form-box">
+  <label for="name">Name:</label>
+  <input type="text" id="name" placeholder="Enter your name" />
+  <label for="age">Age:</label>
+  <input type="number" id="age" placeholder="Enter your age" />
+  <button id="nextBtn">Book This Bus</button>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    let bookedSeats = [];
+
+async function fetchBookedSeats(bus) {
+  try {
+    const response = await fetch("http://localhost:5000/booked_seats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bus })
+    });
+    bookedSeats = await response.json();
+  } catch (err) {
+    console.error("Error fetching booked seats", err);
+    bookedSeats = [];
+  }
+}
+
+    const chairContainer = document.getElementById("chair-seats");
+    const sleeperContainer = document.getElementById("sleeper-seats");
+    const fareDisplay = document.getElementById("fareDisplay");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const from = decodeURIComponent(urlParams.get("from") || "");
+    const to = decodeURIComponent(urlParams.get("to") || "");
+    const username = decodeURIComponent(urlParams.get("user") || "guest");
+
+    let busListRaw = decodeURIComponent(urlParams.get("buses") || "[]");
+    let busList = [];
+    try {
+      busList = JSON.parse(busListRaw);
+    } catch {
+      busList = [];
+    }
+
+    document.getElementById("displayFrom").textContent = from;
+    document.getElementById("displayTo").textContent = to;
+
+    let currentBusIndex = 0;
+    const allBookings = [];
+    let selectedSeats = [];
+
+    function updateBusLabel() {
+      document.getElementById("displayBus").textContent = busList[currentBusIndex] || "N/A";
+    }
+
+    function updateFare() {
+      const total = selectedSeats.reduce((sum, seat) => sum + parseInt(seat.dataset.price), 0);
+      fareDisplay.textContent = `Total Fare: ₹${total}`;
+      return total;
+    }
+
+    async function renderSeats() {
+  const currentBus = busList[currentBusIndex];
+  await fetchBookedSeats(currentBus);  // get latest booked seats
+
+  chairContainer.innerHTML = "";
+  sleeperContainer.innerHTML = "";
+  selectedSeats = [];
+
+  for (let i = 1; i <= 20; i++) {
+    const seat = document.createElement("div");
+    const label = "C" + i;
+    seat.innerText = label;
+    seat.className = "seat";
+    seat.dataset.price = 40;
+    seat.style.background = "#c7d2fe";
+
+    if (bookedSeats.includes(label)) {
+      seat.classList.add("booked");
+    } else {
+      seat.addEventListener("click", () => toggleSeat(seat));
+    }
+    chairContainer.appendChild(seat);
+  }
+
+  for (let i = 1; i <= 10; i++) {
+    const seat = document.createElement("div");
+    const label = "S" + i;
+    seat.innerText = label;
+    seat.className = "seat";
+    seat.dataset.price = 70;
+    seat.style.background = "#fcd34d";
+
+    if (bookedSeats.includes(label)) {
+      seat.classList.add("booked");
+    } else {
+      seat.addEventListener("click", () => toggleSeat(seat));
+    }
+    sleeperContainer.appendChild(seat);
+  }
+}
+
+
+    function toggleSeat(seat) {
+      if (seat.classList.contains("selected")) {
+        seat.classList.remove("selected");
+        selectedSeats.splice(selectedSeats.indexOf(seat), 1);
+      } else {
+        seat.classList.add("selected");
+        selectedSeats.push(seat);
+      }
+      updateFare();
+    }
+
+    async function handleBooking(event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const age = document.getElementById("age").value.trim();
+
+      if (!name || !age) {
+        alert("Please enter name and age.");
+        return;
+      }
+
+      const currentBus = busList[currentBusIndex];
+      if (!currentBus) return;
+
+      if (selectedSeats.length === 0) {
+        alert("Please select at least one seat.");
+        return;
+      }
+
+      const seatLabels = selectedSeats.map(seat => seat.innerText);
+      const fare = updateFare();
+
+      // (Optional) Send to backend if needed
+      // for (const seat of seatLabels) {
+      //   await fetch("http://localhost:5000/book", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ username, bus: currentBus, seat, from, to, fare })
+      //   });
+      // }
+
+      allBookings.push({ bus: currentBus, seats: seatLabels, fare });
+
+      currentBusIndex++;
+      if (currentBusIndex >= busList.length) {
+        generatePDF(name, age);
+      } else {
+        updateBusLabel();
+        renderSeats();
+        fareDisplay.textContent = `Total Fare: ₹0`;
+      }
+    }
+
+    function generatePDF(name, age) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("SmartBus Ticket Confirmation", 20, 20);
+      doc.setFontSize(12);
+      doc.text("Name: " + name, 20, 35);
+      doc.text("Age: " + age, 20, 43);
+      doc.text("From: " + from, 20, 51);
+      doc.text("To: " + to, 20, 59);
+
+      let y = 70;
+      allBookings.forEach((entry, idx) => {
+        doc.text(`Bus ${idx + 1}: ${entry.bus}`, 20, y);
+        y += 8;
+        doc.text(`Seats: ${entry.seats.join(", ")}`, 20, y);
+        y += 8;
+        doc.text(`Fare: Rs${entry.fare}`, 20, y);
+        y += 10;
+      });
+
+      const totalFare = allBookings.reduce((sum, b) => sum + b.fare, 0);
+      doc.setFontSize(14);
+      doc.text(`Total Fare: Rs${totalFare}`, 20, y + 5);
+
+      doc.save(`${name}_ticket.pdf`);
+    }
+
+    updateBusLabel();
+    renderSeats();
+    nextBtn.addEventListener("click", handleBooking);
+  });
+</script>
+
+</body>
+</html>
